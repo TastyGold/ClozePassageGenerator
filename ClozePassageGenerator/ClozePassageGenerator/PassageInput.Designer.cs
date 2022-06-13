@@ -117,7 +117,7 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.OpenFileButton);
             this.Name = "PassageInput";
-            this.Text = "Cloze Passage Generator - Text Input";
+            this.Text = "Cloz3 - Text Input";
             this.ResumeLayout(false);
             this.PerformLayout();
 

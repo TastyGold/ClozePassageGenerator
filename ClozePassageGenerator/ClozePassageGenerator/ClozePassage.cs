@@ -79,7 +79,7 @@ namespace ClozePassageGenerator
 
             if (blanked)
             {
-                for (int i = 0; i < centre.Length; i++)
+                for (int i = 0; i < Math.Max(5, centre.Length); i++)
                 {
                     mid += "_";
                 }

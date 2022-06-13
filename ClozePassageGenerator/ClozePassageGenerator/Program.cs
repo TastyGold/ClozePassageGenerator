@@ -19,4 +19,9 @@ namespace ClozePassageGenerator
             Application.Run(new MainMenu());
         }
     }
+
+    public static class GlobalData
+    {
+        public static bool devModeEnabled = false;
+    }
 }

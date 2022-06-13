@@ -29,6 +29,7 @@ namespace ClozePassageGenerator
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.passageHeader = new System.Windows.Forms.Label();
             this.mainPanel = new System.Windows.Forms.Panel();
             this.loadingPanel = new System.Windows.Forms.Panel();
@@ -41,6 +42,7 @@ namespace ClozePassageGenerator
             this.button1 = new System.Windows.Forms.Button();
             this.mouseOverTip = new System.Windows.Forms.Label();
             this.answerRandomly = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.mainPanel.SuspendLayout();
             this.loadingPanel.SuspendLayout();
             this.SuspendLayout();
@@ -102,6 +104,7 @@ namespace ClozePassageGenerator
             this.openButton.Size = new System.Drawing.Size(75, 23);
             this.openButton.TabIndex = 7;
             this.openButton.Text = "Open";
+            this.toolTip1.SetToolTip(this.openButton, "Open a .cloz file");
             this.openButton.UseVisualStyleBackColor = true;
             this.openButton.Click += new System.EventHandler(this.openButton_Click);
             // 
@@ -113,6 +116,7 @@ namespace ClozePassageGenerator
             this.Finish.Size = new System.Drawing.Size(75, 23);
             this.Finish.TabIndex = 8;
             this.Finish.Text = "Finish";
+            this.toolTip1.SetToolTip(this.Finish, "Submit answers and receive a score");
             this.Finish.UseVisualStyleBackColor = true;
             this.Finish.Click += new System.EventHandler(this.Finish_Click);
             // 
@@ -137,6 +141,7 @@ namespace ClozePassageGenerator
             this.percentageCheckBox.Size = new System.Drawing.Size(107, 17);
             this.percentageCheckBox.TabIndex = 10;
             this.percentageCheckBox.Text = "View Percentage";
+            this.toolTip1.SetToolTip(this.percentageCheckBox, "Display score as a percentage");
             this.percentageCheckBox.UseVisualStyleBackColor = true;
             this.percentageCheckBox.Visible = false;
             this.percentageCheckBox.CheckedChanged += new System.EventHandler(this.percentageCheckBox_CheckedChanged);
@@ -148,6 +153,7 @@ namespace ClozePassageGenerator
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 11;
             this.button1.Text = "Back";
+            this.toolTip1.SetToolTip(this.button1, "Return to menu.");
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -165,12 +171,15 @@ namespace ClozePassageGenerator
             // answerRandomly
             // 
             this.answerRandomly.Enabled = false;
-            this.answerRandomly.Location = new System.Drawing.Point(521, 415);
+            this.answerRandomly.Location = new System.Drawing.Point(499, 415);
             this.answerRandomly.Name = "answerRandomly";
-            this.answerRandomly.Size = new System.Drawing.Size(186, 23);
+            this.answerRandomly.Size = new System.Drawing.Size(208, 23);
             this.answerRandomly.TabIndex = 13;
-            this.answerRandomly.Text = "Answer Randomly (For Testing)";
+            this.answerRandomly.Text = "Answer Randomly (Developer Mode)";
+            this.toolTip1.SetToolTip(this.answerRandomly, "Automatically fill all answer boxes with randomly selected items from the word ba" +
+        "nk");
             this.answerRandomly.UseVisualStyleBackColor = true;
+            this.answerRandomly.Visible = false;
             this.answerRandomly.Click += new System.EventHandler(this.button2_Click);
             // 
             // ClozeTest
@@ -189,7 +198,7 @@ namespace ClozePassageGenerator
             this.Controls.Add(this.mainPanel);
             this.Controls.Add(this.passageHeader);
             this.Name = "ClozeTest";
-            this.Text = "ClozeTest";
+            this.Text = "Cloz3 - Test";
             this.Load += new System.EventHandler(this.ClozeTest_Load);
             this.mainPanel.ResumeLayout(false);
             this.loadingPanel.ResumeLayout(false);
@@ -212,5 +221,6 @@ namespace ClozePassageGenerator
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label mouseOverTip;
         private System.Windows.Forms.Button answerRandomly;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

@@ -70,13 +70,13 @@ namespace ClozePassageGenerator
 
             passageHeader.Text = "Fill in the blanks:";
             Finish.Enabled = true;
-            answerRandomly.Enabled = true;
+            if (GlobalData.devModeEnabled) answerRandomly.Enabled = true;
         }
 
         public void ResetForm()
         {
             currentLine = 0;
-            currentX = 0;
+            currentX = leftMarginWidth;
             wordBankBox.Items.Clear();
             answerBoxes = new List<TextBox>();
             blankWordIndexes = new List<int>();
@@ -87,29 +87,42 @@ namespace ClozePassageGenerator
             finished = false;
             finalScore = -1;
 
+            Panel p = loadingPanel;
             mainPanel.Controls.Clear();
+            mainPanel.Controls.Add(p);
 
             percentageCheckBox.Checked = false;
             percentageCheckBox.Visible = false;
             mouseOverTip.Visible = false;
             Finish.Enabled = false;
-            answerRandomly.Visible = true;
+            if (GlobalData.devModeEnabled) answerRandomly.Visible = true;
             scoreLabel.Visible = false;
         }
 
-        public void ReadPassageFromFile(string filePath)
+        public void ReadPassageFromFileLocal(string filePath)
         {
             ResetForm();
 
             passageHeader.Text = "Loading passage:";
             passageHeader.Update();
+
+
+            passageManager = ReadPassageFromFile(filePath, out _);
+        }
+
+        public static ClozePassage ReadPassageFromFile(string filePath, out bool found)
+        {
+            ClozePassage output = new ClozePassage();
+
             string ext = Path.GetExtension(filePath);
             if (ext != ".cloz")
             {
+                found = false;
                 MessageBox.Show($"Invalid file type \"{ext}\", please select a \".cloz\" file instead.");
             }
             else
             {
+                found = true;
                 Stream s = File.OpenRead(filePath);
                 BinaryReader bin = new BinaryReader(s);
                 using (bin)
@@ -125,10 +138,12 @@ namespace ClozePassageGenerator
                     for (int i = 0; i < wordCount; i++)
                     {
                         string rawWord = bin.ReadString();
-                        passageManager.words.Add(new Word(rawWord, i) { blanked = blanked[i] });
+                        output.words.Add(new Word(rawWord, i) { blanked = blanked[i] });
                     }
                 }
             }
+
+            return output;
         }
 
         public void InitialiseWordBank()
@@ -332,11 +347,11 @@ namespace ClozePassageGenerator
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "Cloz Files (*.cloz*)|*.cloz*";
             dialog.FilterIndex = 1;
-            dialog.InitialDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent + "/SavedPassages";
+            dialog.InitialDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + @"\SavedPassages";
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                ReadPassageFromFile(dialog.FileName);
+                ReadPassageFromFileLocal(dialog.FileName);
                 FindAndSetLongestBlank();
                 LoadPassage();
             }
@@ -360,11 +375,11 @@ namespace ClozePassageGenerator
             string warning = string.Empty;
             if (IsAnyTextboxEmpty())
             {
-                warning = "You have not put a word in all boxes. Are you sure you want to finish?";
+                warning = "You have not put a word in every box. Are you sure you want to finish?";
             }
             else if (IsAnyTextboxInvalid())
             {
-                warning = "One or more answers are not present in the word bank. Are you sure you want to finish?";
+                warning = "One or more answers do not exist in the word bank. Are you sure you want to finish?";
             }
 
             var confirmResult = warning == string.Empty ? DialogResult.Yes :

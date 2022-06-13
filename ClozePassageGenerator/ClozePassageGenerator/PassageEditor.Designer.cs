@@ -28,12 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PassageEditor));
             this.preview = new System.Windows.Forms.TextBox();
             this.blankedWordsListBox = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.printButton = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.nthSuffix = new System.Windows.Forms.Label();
             this.nthWordApply = new System.Windows.Forms.Button();
@@ -51,6 +53,11 @@
             this.backButton = new System.Windows.Forms.Button();
             this.removeBlankButton = new System.Windows.Forms.Button();
             this.exportButton = new System.Windows.Forms.Button();
+            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
+            this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
+            this.button1 = new System.Windows.Forms.Button();
+            this.printDialog1 = new System.Windows.Forms.PrintDialog();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.nthWordNumericBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lettersLongNumeric)).BeginInit();
             this.SuspendLayout();
@@ -108,15 +115,16 @@
             this.label3.Text = "Word Actions";
             this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
-            // button1
+            // printButton
             // 
-            this.button1.Location = new System.Drawing.Point(713, 415);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Finish";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.printButton.Location = new System.Drawing.Point(713, 415);
+            this.printButton.Name = "printButton";
+            this.printButton.Size = new System.Drawing.Size(75, 23);
+            this.printButton.TabIndex = 5;
+            this.printButton.Text = "Print";
+            this.toolTip1.SetToolTip(this.printButton, "Send this passage to a printer");
+            this.printButton.UseVisualStyleBackColor = true;
+            this.printButton.Click += new System.EventHandler(this.print_Click);
             // 
             // label4
             // 
@@ -144,16 +152,18 @@
             this.nthWordApply.Size = new System.Drawing.Size(49, 23);
             this.nthWordApply.TabIndex = 10;
             this.nthWordApply.Text = "Apply";
+            this.toolTip1.SetToolTip(this.nthWordApply, "Add every Nth word to the blanked list");
             this.nthWordApply.UseVisualStyleBackColor = true;
             this.nthWordApply.Click += new System.EventHandler(this.nthWordApply_Click);
             // 
             // lettersLongApply
             // 
-            this.lettersLongApply.Location = new System.Drawing.Point(739, 65);
+            this.lettersLongApply.Location = new System.Drawing.Point(739, 94);
             this.lettersLongApply.Name = "lettersLongApply";
             this.lettersLongApply.Size = new System.Drawing.Size(49, 23);
             this.lettersLongApply.TabIndex = 11;
             this.lettersLongApply.Text = "Apply";
+            this.toolTip1.SetToolTip(this.lettersLongApply, "Add any words that meet the specified condition to the blanked list");
             this.lettersLongApply.UseVisualStyleBackColor = true;
             this.lettersLongApply.Click += new System.EventHandler(this.lettersLongApply_Click);
             // 
@@ -164,7 +174,7 @@
             "exactly",
             "at least",
             "at most"});
-            this.lengthComboBox.Location = new System.Drawing.Point(547, 67);
+            this.lengthComboBox.Location = new System.Drawing.Point(547, 96);
             this.lengthComboBox.Name = "lengthComboBox";
             this.lengthComboBox.Size = new System.Drawing.Size(64, 21);
             this.lengthComboBox.TabIndex = 12;
@@ -174,7 +184,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(509, 70);
+            this.label6.Location = new System.Drawing.Point(509, 99);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(38, 13);
             this.label6.TabIndex = 13;
@@ -206,7 +216,7 @@
             // 
             // lettersLongNumeric
             // 
-            this.lettersLongNumeric.Location = new System.Drawing.Point(617, 68);
+            this.lettersLongNumeric.Location = new System.Drawing.Point(617, 97);
             this.lettersLongNumeric.Maximum = new decimal(new int[] {
             99,
             0,
@@ -231,7 +241,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(661, 70);
+            this.label7.Location = new System.Drawing.Point(661, 99);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(58, 13);
             this.label7.TabIndex = 17;
@@ -239,11 +249,12 @@
             // 
             // occurrenceApply
             // 
-            this.occurrenceApply.Location = new System.Drawing.Point(739, 94);
+            this.occurrenceApply.Location = new System.Drawing.Point(739, 65);
             this.occurrenceApply.Name = "occurrenceApply";
             this.occurrenceApply.Size = new System.Drawing.Size(49, 23);
             this.occurrenceApply.TabIndex = 18;
             this.occurrenceApply.Text = "Apply";
+            this.toolTip1.SetToolTip(this.occurrenceApply, "Add a specific word to the blanked list");
             this.occurrenceApply.UseVisualStyleBackColor = true;
             this.occurrenceApply.Click += new System.EventHandler(this.occurrenceApply_Click);
             // 
@@ -254,7 +265,7 @@
             "First",
             "Last",
             "All"});
-            this.occurrenceType.Location = new System.Drawing.Point(512, 96);
+            this.occurrenceType.Location = new System.Drawing.Point(512, 67);
             this.occurrenceType.Name = "occurrenceType";
             this.occurrenceType.Size = new System.Drawing.Size(64, 21);
             this.occurrenceType.TabIndex = 19;
@@ -268,13 +279,14 @@
             this.clearBlanked.Size = new System.Drawing.Size(87, 23);
             this.clearBlanked.TabIndex = 20;
             this.clearBlanked.Text = "Clear All";
+            this.toolTip1.SetToolTip(this.clearBlanked, "Remove all blanked words");
             this.clearBlanked.UseVisualStyleBackColor = true;
             this.clearBlanked.Click += new System.EventHandler(this.clearBlanked_Click);
             // 
             // occurrencesLabel
             // 
             this.occurrencesLabel.AutoSize = true;
-            this.occurrencesLabel.Location = new System.Drawing.Point(582, 99);
+            this.occurrencesLabel.Location = new System.Drawing.Point(582, 70);
             this.occurrencesLabel.Name = "occurrencesLabel";
             this.occurrencesLabel.Size = new System.Drawing.Size(73, 13);
             this.occurrencesLabel.TabIndex = 21;
@@ -282,7 +294,7 @@
             // 
             // occurrenceTextBox
             // 
-            this.occurrenceTextBox.Location = new System.Drawing.Point(661, 96);
+            this.occurrenceTextBox.Location = new System.Drawing.Point(658, 67);
             this.occurrenceTextBox.Name = "occurrenceTextBox";
             this.occurrenceTextBox.Size = new System.Drawing.Size(72, 20);
             this.occurrenceTextBox.TabIndex = 22;
@@ -294,6 +306,7 @@
             this.backButton.Size = new System.Drawing.Size(75, 23);
             this.backButton.TabIndex = 23;
             this.backButton.Text = "Back";
+            this.toolTip1.SetToolTip(this.backButton, "Return to previous form. Warning: unsaved changes will be lost.");
             this.backButton.UseVisualStyleBackColor = true;
             this.backButton.Click += new System.EventHandler(this.backButton_Click);
             // 
@@ -305,24 +318,56 @@
             this.removeBlankButton.Size = new System.Drawing.Size(85, 23);
             this.removeBlankButton.TabIndex = 24;
             this.removeBlankButton.Text = "Remove";
+            this.toolTip1.SetToolTip(this.removeBlankButton, "Remove selected word from list");
             this.removeBlankButton.UseVisualStyleBackColor = true;
             this.removeBlankButton.Click += new System.EventHandler(this.removeBlankButton_Click);
             // 
             // exportButton
             // 
-            this.exportButton.Location = new System.Drawing.Point(632, 415);
+            this.exportButton.Location = new System.Drawing.Point(551, 415);
             this.exportButton.Name = "exportButton";
             this.exportButton.Size = new System.Drawing.Size(75, 23);
             this.exportButton.TabIndex = 25;
-            this.exportButton.Text = "Export";
+            this.exportButton.Text = "Save";
+            this.toolTip1.SetToolTip(this.exportButton, "Save this passage to a .cloz file for editing later, and for interactive tests");
             this.exportButton.UseVisualStyleBackColor = true;
-            this.exportButton.Click += new System.EventHandler(this.exportButton_Click);
+            this.exportButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
+            // printDocument1
+            // 
+            this.printDocument1.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument1_PrintPage);
+            // 
+            // printPreviewDialog1
+            // 
+            this.printPreviewDialog1.AutoScrollMargin = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.AutoScrollMinSize = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.ClientSize = new System.Drawing.Size(400, 300);
+            this.printPreviewDialog1.Enabled = true;
+            this.printPreviewDialog1.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialog1.Icon")));
+            this.printPreviewDialog1.Name = "printPreviewDialog1";
+            this.printPreviewDialog1.Visible = false;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(632, 415);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 26;
+            this.button1.Text = "Preview";
+            this.toolTip1.SetToolTip(this.button1, "Preview what the printed document will look like");
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.preivewButton_Click);
+            // 
+            // printDialog1
+            // 
+            this.printDialog1.UseEXDialog = true;
             // 
             // PassageEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.exportButton);
             this.Controls.Add(this.removeBlankButton);
             this.Controls.Add(this.backButton);
@@ -340,14 +385,14 @@
             this.Controls.Add(this.nthWordApply);
             this.Controls.Add(this.nthSuffix);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.printButton);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.blankedWordsListBox);
             this.Controls.Add(this.preview);
             this.Name = "PassageEditor";
-            this.Text = "Cloze Passage Generator - Passage Editor";
+            this.Text = "Cloz3 - Passage Editor";
             this.Load += new System.EventHandler(this.PassageEditor_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nthWordNumericBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lettersLongNumeric)).EndInit();
@@ -363,7 +408,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button printButton;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label nthSuffix;
         private System.Windows.Forms.Button nthWordApply;
@@ -381,5 +426,10 @@
         private System.Windows.Forms.Button backButton;
         private System.Windows.Forms.Button removeBlankButton;
         private System.Windows.Forms.Button exportButton;
+        private System.Drawing.Printing.PrintDocument printDocument1;
+        private System.Windows.Forms.PrintPreviewDialog printPreviewDialog1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.PrintDialog printDialog1;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

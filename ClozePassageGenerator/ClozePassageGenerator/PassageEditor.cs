@@ -13,7 +13,7 @@ namespace ClozePassageGenerator
 {
     public partial class PassageEditor : Form
     {
-        public PassageInput previousForm;
+        public Form previousForm;
         public ClozePassage passageManager = new ClozePassage();
         public List<int> blankedWordIndexes = new List<int>();
 
@@ -51,7 +51,6 @@ namespace ClozePassageGenerator
         private void label1_Click(object sender, EventArgs e) { }
         private void preview_TextChanged(object sender, EventArgs e) { }
         private void label3_Click(object sender, EventArgs e) { }
-        private void button1_Click(object sender, EventArgs e) { }
         private void PassageEditor_Load(object sender, EventArgs e) { }
         private void label5_Click(object sender, EventArgs e) { }
         private void nthSuffix_Click(object sender, EventArgs e) { }
@@ -94,7 +93,7 @@ namespace ClozePassageGenerator
         {
             var confirmResult = blankedWordIndexes.Count == 0 ? DialogResult.Yes : 
                 MessageBox.Show(
-                    "Are you sure you want to return to the text input? Any changes made here will be lost.", 
+                    "Are you sure you want to go back? Any unsaved changes made here will be lost.", 
                     "Go back", 
                     MessageBoxButtons.YesNo
                 );
@@ -241,19 +240,91 @@ namespace ClozePassageGenerator
             RefreshBlankedWordsList();
         }
 
-        private void exportButton_Click(object sender, EventArgs e)
+        private void saveButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog
             {
                 Filter = "cloz files (*.cloz)|*.cloz",
                 FilterIndex = 2,
-                InitialDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent + "/SavedPassages",
+                InitialDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\SavedPassages",
             };
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 passageManager.WriteToFile(saveFileDialog1.FileName);
             }
+        }
+
+        private string stringToPrint = "";
+        private void print_Click(object sender, EventArgs e)
+        {
+            printDocument1.DocumentName = "Cloze Passage";
+
+            stringToPrint = GetStringToPrint();
+
+            var confirmResult = printDialog1.ShowDialog();
+            if (confirmResult == DialogResult.OK)
+            {
+                printDocument1.Print();
+            }
+        }
+
+        private void preivewButton_Click(object sender, EventArgs e)
+        {
+            printDocument1.DocumentName = "Cloze Passage";
+
+            stringToPrint = GetStringToPrint(); 
+            ((ToolStripButton)((ToolStrip)printPreviewDialog1.Controls[1]).Items[0]).Enabled = false;
+
+            printPreviewDialog1.Document = printDocument1;
+            printPreviewDialog1.ShowDialog();
+        }
+
+        private string GetStringToPrint()
+        {
+            string output = "Word Bank:\n";
+
+            for (int i = 0; i < blankedWordIndexes.Count; i++)
+            {
+                output += $"{passageManager.words[blankedWordIndexes[i]].centre.ToLower()}";
+                if (i < blankedWordIndexes.Count - 1) output += ", ";
+            }
+
+            output += "\n\nFill in the blanks:\n";
+
+            for (int i = 0; i < passageManager.words.Count; i++)
+            {
+                output += $"{passageManager.words[i].GetString()} ";
+            }
+
+            return output;
+        }
+        int i = 10;
+
+        //https://docs.microsoft.com/en-us/dotnet/desktop/winforms/printing/how-to-print-text-document?view=netdesktop-6.0
+        private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            int charactersOnPage = 0;
+            int linesPerPage = 0;
+
+            Font f = new Font(this.Font.FontFamily, 16f);
+
+            // Sets the value of charactersOnPage to the number of characters
+            // of stringToPrint that will fit within the bounds of the page.
+            e.Graphics.MeasureString(stringToPrint, f,
+                e.MarginBounds.Size, StringFormat.GenericTypographic,
+                out charactersOnPage, out linesPerPage);
+
+
+            // Draws the string within the bounds of the page
+            e.Graphics.DrawString(stringToPrint, f, Brushes.Black,
+                e.MarginBounds, StringFormat.GenericTypographic);
+
+            // Remove the portion of the string that has been printed.
+            stringToPrint = stringToPrint.Substring(charactersOnPage);
+
+            // Check to see if more pages are to be printed.
+            e.HasMorePages = (stringToPrint.Length > 0);
         }
     }
 }
