@@ -37,7 +37,7 @@ namespace ClozePassageGenerator
         private int currentLine = 0;
 
         public int longestBlankWidth = 10;
-        public int longestWordLetters = 1;
+        //public int longestWordLetters = 1;
 
         public static bool finished = false;
         public static int finalScore = -1;
@@ -81,7 +81,7 @@ namespace ClozePassageGenerator
             answerBoxes = new List<TextBox>();
             blankWordIndexes = new List<int>();
             longestBlankWidth = 10;
-            longestWordLetters = -1;
+            //longestWordLetters = -1;
             answerBoxHoverHandlers = new List<AnswerBoxMouseHoverHandler>();
             passageManager = new ClozePassage();
             finished = false;

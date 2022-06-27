@@ -67,7 +67,7 @@
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 1;
             this.button2.Text = "Open";
-            this.toolTip1.SetToolTip(this.button2, "Open an existing tooltip for editing");
+            this.toolTip1.SetToolTip(this.button2, "Open an existing cloze passage for editing");
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
